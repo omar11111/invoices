@@ -601,6 +601,7 @@ slide is-expanded side-menu__item {
 
 .slide.is-expanded .side-menu__label, .slide.is-expanded .side-menu__icon, .slide.is-expanded .angle {
   color: #0162e8 !important;
+  font-size: 25px !important;
 }
 
 .slide-item.active, .slide-item:hover, .slide-item:focus {
@@ -639,6 +640,7 @@ slide is-expanded side-menu__item {
 .slide.is-expanded a {
   color: #6d7790;
   text-decoration: none;
+  font-size: 18px;
 }
 
 .slide.is-expanded .sub-side-menu__item:before {
@@ -684,7 +686,7 @@ slide is-expanded side-menu__item {
   white-space: nowrap;
   color: #5b6e88;
   position: relative;
-  font-size: 13.5px;
+  font-size:25px;
   line-height: 1;
   vertical-align: middle;
   font-weight: 400;
@@ -742,7 +744,7 @@ slide is-expanded side-menu__item {
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-size: 13px;
+  font-size: 18px;
   height: 32px;
   padding: 0 0 0 56px;
   font-weight: 400;

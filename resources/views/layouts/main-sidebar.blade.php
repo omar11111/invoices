@@ -82,7 +82,7 @@
                                     الاعدادات
                                 </span><i class="angle fe fe-chevron-down"></i></a>
 						<ul class="slide-menu">
-							<li><a class="slide-item" href="{{ url('/' . $page='profile') }}">اضافة قسم</a></li>
+							<li><a class="slide-item" href="{{ url('/' . $page='sections') }}">اضافة قسم</a></li>
 							<li><a class="slide-item" href="{{ url('/' . $page='editprofile') }}">اضافة منتج</a></li>
 						</ul>
 					</li>
