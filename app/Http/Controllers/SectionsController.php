@@ -15,7 +15,8 @@ class SectionsController extends Controller
      */
     public function index()
     {
-        return view('sections.section');
+        $getAllSections = sections::all();
+        return view('sections.section',compact('getAllSections'));
     }
 
     /**
@@ -36,15 +37,19 @@ class SectionsController extends Controller
      */
     public function store(Request $request)
     {
-       $input = $request->all(); 
        
-       $sectionExists= sections::where('section_name','=',$request->section_name)->exists();
+        $validatedData= $request->validate(
+        [
+            'section_name' =>'required|unique:sections|max:255',
+            'description' => 'required'
+        ],
+        [
+        'section_name.required' =>'من فضلك ادخل اسم القسم',
+        'section_name.unique' => 'هذا الحقل موجود مسبقا',
+        'description.required' => 'من فضلك ادخل القسم' 
+    ]);
 
-       if ($sectionExists) {
-           session()->flash('Error','القسم موجود مسبقا');
-           return redirect('/sections');
-       }else{
-           $createdBy= Auth::user()->name;
+        $createdBy= Auth::user()->name;
         sections::create([
             'section_name' => $request->section_name,
             'description'  => $request->section_des,
@@ -54,8 +59,7 @@ class SectionsController extends Controller
 
         session()->flash('Add','تم إضافة القسم بنجاح');
         return redirect("/sections");
-       }
-
+    
       
     }
 
@@ -78,7 +82,7 @@ class SectionsController extends Controller
      */
     public function edit(sections $sections)
     {
-        //
+       
     }
 
     /**
@@ -88,10 +92,36 @@ class SectionsController extends Controller
      * @param  \App\sections  $sections
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, sections $sections)
+    public function update(Request $request)
     {
-        //
-    }
+       $sectionId = $request -> id;
+       
+       $request->validate([
+        'section_name' =>'required|unique:sections|max:255',
+        'description' => 'required'
+       ],[
+        'section_name.required' =>'من فضلك ادخل اسم القسم',
+        'section_name.unique' => 'هذا الحقل موجود مسبقا',
+        'description.required' => 'من فضلك ادخل القسم' 
+       ]);
+
+       // find the section first then update
+       $findSection = sections::find($sectionId);
+       if(!$findSection){
+           session()->flash('Error','هذا القسم غير موجود');
+           return redirect('/sections');
+       } 
+
+       $findSection->update([
+           'section_name' => $request->section_name,
+           'description' => $request->description,
+
+       ]);
+
+       session()->flash('success','تم التعديل بنجاح');
+       return redirect('/sections');
+
+      }
 
     /**
      * Remove the specified resource from storage.
@@ -99,8 +129,21 @@ class SectionsController extends Controller
      * @param  \App\sections  $sections
      * @return \Illuminate\Http\Response
      */
-    public function destroy(sections $sections)
+    public function destroy(Request $request)
     {
-        //
+       $deletedSectioId = $request -> id;
+       
+       $findSectionToDelete = sections::find($deletedSectioId)->delete();
+
+       if(!$findSectionToDelete){
+        session()->flash('Error','لم يتم الحذف بنجاح');
+        return redirect('/sections');
+       }
+
+       session()->flash('success','تم الذف بنجاح');
+       return redirect('/sections');
+
+       
+       
     }
 }

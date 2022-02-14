@@ -29,9 +29,18 @@
 				<!-- row -->
 				<div class="row">
 
-					@if (session()->has('Add'))
+					@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+					@if (session()->has('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>{{ session()->get('Add') }}</strong>
+        <strong>{{ session()->get('success') }}</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
@@ -46,6 +55,8 @@
 	</button>
 </div>
 @endif
+
+
 
 					<div class="col-xl-12">
 						<div class="card mg-b-20">
@@ -68,13 +79,34 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr>
-												<td>61</td>
-												<td>Tiger Nixon</td>
-												<td>System Architect</td>
-												<td>Edinburgh</td>
+											<?php $i=0?>
+											@foreach ($getAllSections as $sections)
+											       
+												<tr>
+													<td>{{ ++$i }}</td>
 												
-											</tr>
+													<td>{{ $sections->section_name }}</td>
+													<td>{{ $sections->description }}</td>
+												
+													<td>{{ $sections->description }}</td>
+													<td>
+													
+															<a class="modal-effect btn btn-sm btn-info" data-effect="effect-scale"
+																data-id="{{ $sections->id }}" data-section_name="{{ $sections->section_name }}"
+																data-description="{{ $sections->description }}" data-toggle="modal"
+																href="#exampleModal2" id="#exampleModal2" title="تعديل"><i class="las la-pen"></i></a>
+													
+				
+													
+															<a class="modal-effect btn btn-sm btn-danger" data-effect="effect-scale"
+																data-id="{{ $sections->id }}" data-section_name="{{ $sections->section_name }}"
+																data-toggle="modal" href="#modaldemo9" id="#modaldemo9" title="حذف"><i
+																	class="las la-trash"></i></a>
+														
+													</td>
+												</tr>
+											@endforeach
+											
 
                                           
 
@@ -87,7 +119,68 @@
 					</div>
 					
 
-				
+				    <!-- edit -->
+					<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+					aria-hidden="true">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalLabel">تعديل القسم</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+			
+								<form action="sections/update" method="post" autocomplete="off">
+									{{ method_field('patch') }}
+									{{ csrf_field() }}
+									<div class="form-group">
+										<input type="hidden" name="id" id="id" value="">
+										<label for="recipient-name" class="col-form-label">اسم القسم:</label>
+										<input class="form-control" name="section_name" id="section_name" type="text">
+									</div>
+									<div class="form-group">
+										<label for="message-text" class="col-form-label">ملاحظات:</label>
+										<textarea class="form-control" id="description" name="description"></textarea>
+									</div>
+							</div>
+							<div class="modal-footer">
+								<button type="submit" class="btn btn-primary">تاكيد</button>
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">اغلاق</button>
+							</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			
+				<!-- delete -->
+				<div class="modal" id="modaldemo9">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content modal-content-demo">
+							<div class="modal-header">
+								<h6 class="modal-title">حذف القسم</h6><button aria-label="Close" class="close" data-dismiss="modal"
+									type="button"><span aria-hidden="true">&times;</span></button>
+							</div>
+							<form action="sections/destroy" method="post">
+								{{ method_field('delete') }}
+								{{ csrf_field() }}
+								<div class="modal-body">
+									<p>هل انت متاكد من عملية الحذف ؟</p><br>
+									<input type="hidden" name="id" id="id" value="">
+									<input class="form-control" name="section_name" id="section_name" type="text" readonly>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+									<button type="submit" class="btn btn-danger">تاكيد</button>
+								</div>
+						</div>
+						</form>
+					</div>
+				</div>
+			
+			
+			
 				
 				</div>
 				
@@ -151,4 +244,27 @@
 <!--Internal  Datatable js -->
 <script src="{{URL::asset('assets/js/table-data.js')}}"></script>
 <script src="{{URL::asset('assets/js/modal.js')}}"></script>
+<script>
+    $('#exampleModal2').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var section_name = button.data('section_name')
+        var description = button.data('description')
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #section_name').val(section_name);
+        modal.find('.modal-body #description').val(description);
+    })
+</script>
+
+<script>
+    $('#modaldemo9').on('show.bs.modal', function(event) {
+        var button = $(event.relatedTarget)
+        var id = button.data('id')
+        var section_name = button.data('section_name')
+        var modal = $(this)
+        modal.find('.modal-body #id').val(id);
+        modal.find('.modal-body #section_name').val(section_name);
+    })
+</script>
 @endsection
