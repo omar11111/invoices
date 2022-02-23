@@ -118,7 +118,6 @@
 						
 					</div>
 					
-
 				    <!-- edit -->
 					<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
 					aria-hidden="true">
@@ -152,7 +151,7 @@
 							</form>
 						</div>
 					</div>
-				</div>
+			     	</div>
 			
 				<!-- delete -->
 				<div class="modal" id="modaldemo9">

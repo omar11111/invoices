@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\InvoiceController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,6 +28,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('/invoices', 'InvoiceController');
 
 Route::resource('/sections', 'SectionsController');
+Route::resource('/products', 'ProductController');
 
 Route::get('/{page}', 'AdminController@index');
 

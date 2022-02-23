@@ -16,7 +16,7 @@ class SectionsController extends Controller
     public function index()
     {
         $getAllSections = sections::all();
-        return view('sections.section',compact('getAllSections'));
+        return view('pages.sections.section',compact('getAllSections'));
     }
 
     /**
@@ -38,15 +38,17 @@ class SectionsController extends Controller
     public function store(Request $request)
     {
        
+        // return $request;
+
         $validatedData= $request->validate(
         [
             'section_name' =>'required|unique:sections|max:255',
-            'description' => 'required'
+            'section_des' => 'required'
         ],
         [
         'section_name.required' =>'من فضلك ادخل اسم القسم',
         'section_name.unique' => 'هذا الحقل موجود مسبقا',
-        'description.required' => 'من فضلك ادخل القسم' 
+        'section_des.required' => 'من فضلك ادخل الوصف' 
     ]);
 
         $createdBy= Auth::user()->name;
@@ -56,8 +58,9 @@ class SectionsController extends Controller
             'created_by'   =>$createdBy,
         ]);
  
+        
 
-        session()->flash('Add','تم إضافة القسم بنجاح');
+        session()->flash('success','تم إضافة القسم بنجاح');
         return redirect("/sections");
     
       
