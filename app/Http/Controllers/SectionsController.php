@@ -144,9 +144,9 @@ class SectionsController extends Controller
        }
 
        session()->flash('success','تم الذف بنجاح');
-       return redirect('/sections');
-
-       
+       return redirect('/sections');   
        
     }
+
+    
 }
