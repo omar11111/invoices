@@ -22,6 +22,14 @@
 <!-- breadcrumb -->
 @endsection
 @section('content')
+@if (session()->has('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ session()->get('success') }}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+@endif
 <!-- row -->
 <div class="row ">
 
@@ -48,48 +56,105 @@
                        
                         <div class="row">
                             <div class="col-sm-12">
-                                <table class="table text-md-nowrap dataTable no-footer" id="example1" role="grid"
-                                    aria-describedby="example1_info">
+                                <table id="example1" class="table key-buttons text-md-nowrap" data-page-length='50'style="text-align: center">
                                     <thead>
                                         <tr>
                                             <th class="border-bottom-0">#</th>
                                             <th class="border-bottom-0">رقم الفاتورة</th>
-                                            <th class="border-bottom-0">تاريخ الفاتورة</th>
+                                            <th class="border-bottom-0">تاريخ القاتورة</th>
                                             <th class="border-bottom-0">تاريخ الاستحقاق</th>
-                                            <th class="border-bottom-0">المنتج القسم</th>
+                                            <th class="border-bottom-0">المنتج</th>
+                                            <th class="border-bottom-0">القسم</th>
+                                            <th class="border-bottom-0">الخصم</th>
                                             <th class="border-bottom-0">نسبة الضريبة</th>
                                             <th class="border-bottom-0">قيمة الضريبة</th>
-                                            <th class="border-bottom-0"> الاجمالى</th>
-                                            <th class="border-bottom-0"> الحالة</th>
-                                            <th class="border-bottom-0"> الملاحظات</th>
+                                            <th class="border-bottom-0">الاجمالي</th>
+                                            <th class="border-bottom-0">الحالة</th>
+                                            <th class="border-bottom-0">ملاحظات</th>
+                                            <th class="border-bottom-0">العمليات</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-
-                                        <tr role="row" class="odd">
-                                            <td class="sorting_1">Adrian</td>
-                                            <td>Terry</td>
-                                            <td>Marketing Officer</td>
-                                            <td>2013/04/21</td>
-                                            <td>$543,769</td>
-                                            <td>a.terry@datatables.net</td>
-                                            <td>Marketing Officer</td>
-                                            <td>2013/04/21</td>
-                                            <td>$543,769</td>
-                                            <td>a.terry@datatables.net</td>
-                                        </tr>
-                                        <tr role="row" class="even">
-                                            <td class="sorting_1">Angelica</td>
-                                            <td>Ramos</td>
-                                            <td>Chief Executive Officer</td>
-                                            <td>20017/10/15</td>
-                                            <td>$6,234,000</td>
-                                            <td>a.ramos@datatables.net</td>
-                                            <td>Marketing Officer</td>
-                                            <td>2013/04/21</td>
-                                            <td>$543,769</td>
-                                            <td>a.terry@datatables.net</td>
-                                        </tr>
+                                        @php
+                                        $i = 0;
+                                        @endphp
+                                        @foreach ($invoices as $invoice)
+                                            @php
+                                            $i++
+                                            @endphp
+                                            <tr>
+                                                <td>{{ $i }}</td>
+                                                <td>{{ $invoice->invoice_number }} </td>
+                                                <td>{{ $invoice->invoice_Date }}</td>
+                                                <td>{{ $invoice->Due_date }}</td>
+                                                <td>{{ $invoice->product }}</td>
+                                                <td><a
+                                                        href="{{ url('InvoicesDetails') }}/{{ $invoice->id }}">{{ $invoice->section->section_name }}</a>
+                                                </td>
+                                                <td>{{ $invoice->Discount }}</td>
+                                                <td>{{ $invoice->Rate_VAT }}</td>
+                                                <td>{{ $invoice->Value_VAT }}</td>
+                                                <td>{{ $invoice->Total }}</td>
+                                                <td>
+                                                    @if ($invoice->Value_Status == 1)
+                                                        <span class="text-success">{{ $invoice->Status }}</span>
+                                                    @elseif($invoice->Value_Status == 2)
+                                                        <span class="text-danger">{{ $invoice->Status }}</span>
+                                                    @else
+                                                        <span class="text-warning">{{ $invoice->Status }}</span>
+                                                    @endif
+        
+                                                </td>
+        
+                                                <td>{{ $invoice->note }}</td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button aria-expanded="false" aria-haspopup="true"
+                                                            class="btn ripple btn-primary btn-sm" data-toggle="dropdown"
+                                                            type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
+                                                        <div class="dropdown-menu tx-13">
+                                                            @can('تعديل الفاتورة')
+                                                                <a class="dropdown-item"
+                                                                    href=" {{ url('edit_invoice') }}/{{ $invoice->id }}">تعديل
+                                                                    الفاتورة</a>
+                                                            @endcan
+        
+                                                            @can('حذف الفاتورة')
+                                                                <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+                                                                    data-toggle="modal" data-target="#delete_invoice"><i
+                                                                        class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;حذف
+                                                                    الفاتورة</a>
+                                                            @endcan
+        
+                                                            @can('تغير حالة الدفع')
+                                                                <a class="dropdown-item"
+                                                                    href="{{ URL::route('Status_show', [$invoice->id]) }}"><i
+                                                                        class=" text-success fas
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            fa-money-bill"></i>&nbsp;&nbsp;تغير
+                                                                    حالة
+                                                                    الدفع</a>
+                                                            @endcan
+        
+                                                            @can('ارشفة الفاتورة')
+                                                                <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+                                                                    data-toggle="modal" data-target="#Transfer_invoice"><i
+                                                                        class="text-warning fas fa-exchange-alt"></i>&nbsp;&nbsp;نقل الي
+                                                                    الارشيف</a>
+                                                            @endcan
+        
+                                                            @can('طباعةالفاتورة')
+                                                                <a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
+                                                                        class="text-success fas fa-print"></i>&nbsp;&nbsp;طباعة
+                                                                    الفاتورة
+                                                                </a>
+                                                            @endcan
+                                                        </div>
+                                                    </div>
+        
+                                                </td>
+                                            </tr>
+                                        @endforeach
+        
                                     </tbody>
                                 </table>
                             </div>
