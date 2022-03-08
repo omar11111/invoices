@@ -27,7 +27,7 @@ class InvoiceController extends Controller
     public function index()
     {
        $invoices = Invoice::all();
-       return view('invoices.index',compact('invoices'));
+       return view('pages.invoices.index',compact('invoices'));
     }
 
     /**
@@ -38,7 +38,7 @@ class InvoiceController extends Controller
     public function create()
     {
         $sections = sections::all();
-        return view('invoices.add_invoice',compact('sections'));
+        return view('pages.invoices.add_invoice',compact('sections'));
     }
 
     /**
@@ -53,7 +53,10 @@ class InvoiceController extends Controller
         if(!$validated){
             return redirect('/invoices/create');
         }
-        
+           
+
+       
+
         $isInvoiceCreated=  Invoice::create([
             'invoice_number' => $request->invoice_number,
             'invoice_Date' => $request->invoice_Date,
@@ -125,7 +128,7 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        //
+       
     }
 
     /**
@@ -136,7 +139,7 @@ class InvoiceController extends Controller
      */
     public function edit(Invoice $invoice)
     {
-        //
+        
     }
 
     /**
